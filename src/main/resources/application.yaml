@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: auction
+  datasource:
+    url: jdbc:postgresql://localhost:5432/auction
+    username: auction
+    password: auction
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+temporal:
+  host: localhost
+  port: 7233
+  namespace: default
+  task-queue: auction-task-queue
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

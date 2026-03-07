@@ -1,0 +1,406 @@
+openapi: "3.0.3"
+info:
+  title: Auction API
+  description: Fault-tolerant auction and bidding platform
+  version: "1.0.0"
+
+paths:
+  /sellers:
+    get:
+      tags:
+        - seller
+      operationId: listSellers
+      summary: List all sellers
+      responses:
+        '200':
+          description: List of sellers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SellerResponse'
+    post:
+      tags:
+        - seller
+      operationId: createSeller
+      summary: Create a new seller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SellerRequest'
+      responses:
+        '201':
+          description: Seller created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SellerResponse'
+
+  /sellers/{id}:
+    get:
+      tags:
+        - seller
+      operationId: getSeller
+      summary: Get a seller by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Seller found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SellerResponse'
+        '404':
+          description: Seller not found
+
+  /buyers:
+    get:
+      tags:
+        - buyer
+      operationId: listBuyers
+      summary: List all buyers
+      responses:
+        '200':
+          description: List of buyers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BuyerResponse'
+    post:
+      tags:
+        - buyer
+      operationId: createBuyer
+      summary: Create a new buyer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuyerRequest'
+      responses:
+        '201':
+          description: Buyer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuyerResponse'
+
+  /buyers/{id}:
+    get:
+      tags:
+        - buyer
+      operationId: getBuyer
+      summary: Get a buyer by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Buyer found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuyerResponse'
+        '404':
+          description: Buyer not found
+
+  /auctions:
+    get:
+      tags:
+        - auction
+      operationId: listAuctions
+      summary: List all auctions
+      responses:
+        '200':
+          description: List of auctions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuctionResponse'
+    post:
+      tags:
+        - auction
+      operationId: createAuction
+      summary: Create a new auction and start the closing workflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuctionRequest'
+      responses:
+        '201':
+          description: Auction created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuctionResponse'
+
+  /auctions/{id}:
+    put:
+      tags:
+        - auction
+      operationId: updateAuction
+      summary: Update an existing auction
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuctionUpdateRequest'
+      responses:
+        '200':
+          description: Auction updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuctionResponse'
+        '404':
+          description: Auction not found
+    get:
+      tags:
+        - auction
+      operationId: getAuction
+      summary: Get an auction by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Auction found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuctionResponse'
+        '404':
+          description: Auction not found
+
+  /auctions/{auctionId}/bids:
+    post:
+      tags:
+        - bid
+      operationId: placeBid
+      summary: Place a bid on an auction
+      parameters:
+        - name: auctionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BidRequest'
+      responses:
+        '201':
+          description: Bid placed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BidResponse'
+        '400':
+          description: Invalid bid (price too low or auction ended)
+
+  /auctions/{auctionId}/winning-bid:
+    get:
+      tags:
+        - bid
+      operationId: getWinningBid
+      summary: Get the winning bid for a closed auction
+      parameters:
+        - name: auctionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Winning bid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WinningBidResponse'
+        '404':
+          description: No winning bid found
+
+components:
+  schemas:
+    SellerRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+    SellerResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+
+    BuyerRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+    BuyerResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+
+    AuctionRequest:
+      type: object
+      required:
+        - name
+        - sellerId
+        - price
+        - endTime
+      properties:
+        name:
+          type: string
+        sellerId:
+          type: string
+          format: uuid
+        price:
+          type: number
+          format: double
+        endTime:
+          type: string
+          format: date-time
+
+    AuctionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        sellerId:
+          type: string
+          format: uuid
+        price:
+          type: number
+          format: double
+        endTime:
+          type: string
+          format: date-time
+        additionalBufferTime:
+          type: integer
+
+    AuctionUpdateRequest:
+      type: object
+      required:
+        - name
+        - price
+        - endTime
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+          format: double
+        endTime:
+          type: string
+          format: date-time
+
+    BidRequest:
+      type: object
+      required:
+        - buyerId
+        - price
+      properties:
+        buyerId:
+          type: string
+          format: uuid
+        price:
+          type: number
+          format: double
+
+    BidResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        auctionId:
+          type: string
+          format: uuid
+        buyerId:
+          type: string
+          format: uuid
+        price:
+          type: number
+          format: double
+        timestamp:
+          type: string
+          format: date-time
+        winningBid:
+          type: boolean
+
+    WinningBidResponse:
+      type: object
+      properties:
+        sellerId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        buyerId:
+          type: string
+          format: uuid
+        initialPrice:
+          type: number
+          format: double
+        winningPrice:
+          type: number
+          format: double
+        initialEndTime:
+          type: string
+          format: date-time
+        eventualEndTime:
+          type: string
+          format: date-time

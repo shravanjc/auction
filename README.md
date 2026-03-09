@@ -1,19 +1,18 @@
 # Simple auction and bidding platform
 
-## It allows the following via apis:
+## Stakeholders:
+- Seller: Captures the details of the entity/person selling an item as part of the auction.
+- Auction: Captures the details for an auction by a seller for an item.
+- Buyer: Captures the details of the buyer who can place bids on an auction.
 
-- Allows you to create seller profile. With properties:
-    - `id`, `name`
-- Allows you to create buyer profile. With properties:
-    - `id`, `name`
-- Allows you to create simple auction. With properties:
-    - `id`, `name`, `seller_id`, `price`, `endtime` (utc zulu), `additional_buffer_time` (in
-      minutes)
-- Allows you to bid on an auction. With properties:
-    - `id`, `auction_id`, `buyer_id`, `price`, `timestamp`, `is_winning_bid` (defaulted to false)
-- Fetch the winning bid information given an `auction_id`. With properties:
-    - `seller_id`, `name`, `buyer_id`, `initial_price`, `winning_price`, `initial_endtime`,
-      `eventual_endtime`
+## Business Process flows:
+
+- Setup: Setup all the stakeholders in the application.
+- Bidding: A buyer interested in an auction can bid/quote a price they are willing to pay.
+- Auction-closing: An automated system process to pick a winner (if one is available) at the end time of
+  an auction as reached.
+- Auction-extension: An automated system process to extend the endtime of the auction to prevent
+  snipping (last second bids). 
 
 ## Workflow actions and validations:
 
@@ -25,25 +24,15 @@
   incremented by 1 minute.
   This should update the Temporal workflow.
 
-## Architectural rules:
-
-- Follow DDD design pattern. Keep domain as framework independent as possible. It's okay to have
-  Spring @Entities though
-- Use postgres-sql for database. Have it setup via a `docker-compose.yml` file. Also, Temporal
-  server in it.
-- Create openapi-spec for the apis
-- Expose swagger ui for internal testing
-- Package structure:
-    - Have all logic in data package.
-    - Application package will only orchestrate.
-    - Api will have controllers.
-    - Config will have application property mapped classes.
-
 ## Auction Workflow Design
 
 ### Overview
 
-When an auction is created, a **Temporal workflow** is started that owns the lifecycle of that auction — sleeping until the deadline and then marking the winner. If a late bid arrives, the workflow is signalled to extend its timer. This makes the closing logic fault-tolerant: Temporal persists workflow state, so a server restart or crash cannot cause an auction to close without a winner being recorded.
+When an auction is created, a [**Temporal workflow**](https://temporal.io/) is started that owns the
+lifecycle of that auction — sleeping until the deadline and then marking the winner. If a late bid
+arrives, the workflow is `signaled` to extend its timer. This makes the closing logic fault-tolerant:
+Temporal persists workflow state, so a server restart or crash cannot cause an auction to close
+without a winner being recorded.
 
 ### Flow Diagram
 
@@ -87,19 +76,21 @@ BidApplicationService
 
 ### Temporal rules and logic:
 
-- **Workflow method (@WorkflowMethod)
-  **                                                                                                                                                                                                        
+- **Workflow method (@WorkflowMethod)**:
+
   The entry point / main body of the workflow. It runs as durable, replayable code — Temporal
   records every step so it can replay the execution after a crash. In this codebase it's execute(),
   which owns the auction lifecycle timer loop.
 
 - **Signal (@SignalMethod)**
+
   An asynchronous message sent to a running workflow from outside. It mutates workflow state without
   waiting for a response. Here, extendEndTime() is called by BidApplicationService when a
   last-second bid arrives — it increments additionalMinutes inside the running workflow, which
   causes the Workflow.await loop to wake up and recalculate the deadline.
 
 - **Activity (@ActivityMethod)**
+
   A regular, non-replayable unit of work called from within a workflow. Unlike workflow code,
   activities can do I/O (DB calls, HTTP, etc.) and are retried automatically on failure. Here,
   markWinningBid() is the activity — it queries the DB and flips isWinningBid = true. It can't be
@@ -116,7 +107,37 @@ Outside world
 │                               └─ calls ──► @ActivityMethod  (I/O, side effects)
 ```
 
-The key rule: workflow code must be deterministic (no DB calls, no System.currentTimeMillis(), use Workflow.currentTimeMillis() instead). Anything with side effects goes in an activity.
+The key rule: workflow code must be deterministic (no DB calls, no System.currentTimeMillis(), use
+Workflow.currentTimeMillis() instead). Anything with mutation/side effects goes in an activity.
+
+## Architectural rules:
+
+- Follow DDD design pattern. Keep domain as framework independent as possible. It's okay to have
+  Spring @Entities though
+- Use postgres-sql for database. Have it setup via a `docker-compose.yml` file. Also, Temporal
+  server in it.
+- Create openapi-spec for the apis
+- Expose swagger ui for internal testing
+- Package structure:
+    - Have all logic in data package.
+    - Application package will only orchestrate.
+    - Api will have controllers.
+    - Config will have application property mapped classes.
+
+## It allows the following apis:
+
+- Allows you to create seller profile. With properties:
+    - `id`, `name`
+- Allows you to create buyer profile. With properties:
+    - `id`, `name`
+- Allows you to create simple auction. With properties:
+    - `id`, `name`, `seller_id`, `price`, `endtime` (utc zulu), `additional_buffer_time` (in
+      minutes)
+- Allows you to bid on an auction. With properties:
+    - `id`, `auction_id`, `buyer_id`, `price`, `timestamp`, `is_winning_bid` (defaulted to false)
+- Fetch the winning bid information given an `auction_id`. With properties:
+    - `seller_id`, `name`, `buyer_id`, `initial_price`, `winning_price`, `initial_endtime`,
+      `eventual_endtime`
 
 ### Key Components
 

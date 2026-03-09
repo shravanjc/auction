@@ -1,9 +1,9 @@
 package com.bidding.auction.api
 
-import com.bidding.auction.api.generated.SellerApi
-import com.bidding.auction.api.generated.model.SellerRequest
-import com.bidding.auction.api.generated.model.SellerResponse
 import com.bidding.auction.application.SellerApplicationService
+import com.bidding.auction.generated.api.SellerApi
+import com.bidding.auction.generated.api.model.SellerRequest
+import com.bidding.auction.generated.api.model.SellerResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID

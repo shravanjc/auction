@@ -1,0 +1,50 @@
+[versions]
+kotlin = "2.3.10"
+spring-boot = "4.0.3"
+spring-dependency-management = "1.1.7"
+openapi-generator = "7.14.0"
+temporal-sdk = "1.27.0"
+springdoc = "3.0.2"
+jakarta-annotation = "3.0.0"
+mockito-kotlin = "6.2.3"
+archunit = "1.4.1"
+jqwik = "1.9.3"
+rest-assured = "6.0.0"
+pitest = "1.22.1"
+pitest-junit5 = "1.2.3"
+jacoco = "0.8.14"
+docker-compose = "0.17.7"
+
+[libraries]
+spring-boot-web = { module = "org.springframework.boot:spring-boot-starter-webmvc" }
+spring-boot-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+spring-boot-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
+jackson-kotlin = { module = "tools.jackson.module:jackson-module-kotlin" }
+temporal-sdk = { module = "io.temporal:temporal-sdk", version.ref = "temporal-sdk" }
+springdoc = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+jakarta-annotation = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakarta-annotation" }
+postgresql = { module = "org.postgresql:postgresql" }
+
+spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-webmvc-test" }
+kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
+archunit = { module = "com.tngtech.archunit:archunit-junit5", version.ref = "archunit" }
+jqwik = { module = "net.jqwik:jqwik", version.ref = "jqwik" }
+temporal-testing = { module = "io.temporal:temporal-testing", version.ref = "temporal-sdk" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
+rest-assured = { module = "io.rest-assured:rest-assured", version.ref = "rest-assured" }
+awaitility-kotlin = { module = "org.awaitility:awaitility-kotlin" }
+
+pitest-core = { module = "org.pitest:pitest", version.ref = "pitest" }
+pitest-junit5 = { module = "org.pitest:pitest-junit5-plugin", version.ref = "pitest-junit5" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
+openapi-generator = { id = "org.openapi.generator", version.ref = "openapi-generator" }
+docker-compose = { id = "com.avast.gradle.docker-compose", version.ref = "docker-compose" }

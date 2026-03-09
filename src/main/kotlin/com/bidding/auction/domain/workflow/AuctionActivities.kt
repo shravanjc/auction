@@ -1,10 +1,8 @@
 package com.bidding.auction.domain.workflow
 
 import io.temporal.activity.ActivityInterface
-import io.temporal.activity.ActivityMethod
 
 @ActivityInterface
-fun interface AuctionActivities {
-    @ActivityMethod
+interface AuctionActivities {
     fun markWinningBid(auctionId: String)
 }

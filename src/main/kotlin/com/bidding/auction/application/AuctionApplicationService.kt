@@ -1,13 +1,13 @@
 package com.bidding.auction.application
 
-import com.bidding.auction.api.generated.model.AuctionRequest
-import com.bidding.auction.api.generated.model.AuctionResponse
-import com.bidding.auction.api.generated.model.AuctionUpdateRequest
 import com.bidding.auction.config.TemporalProperties
 import com.bidding.auction.domain.model.Auction
 import com.bidding.auction.domain.repository.AuctionRepository
 import com.bidding.auction.domain.repository.SellerRepository
 import com.bidding.auction.domain.workflow.AuctionWorkflow
+import com.bidding.auction.generated.api.model.AuctionRequest
+import com.bidding.auction.generated.api.model.AuctionResponse
+import com.bidding.auction.generated.api.model.AuctionUpdateRequest
 import io.temporal.client.WorkflowClient
 import io.temporal.client.WorkflowOptions
 import org.springframework.stereotype.Service

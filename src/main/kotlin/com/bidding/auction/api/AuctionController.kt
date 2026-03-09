@@ -1,10 +1,10 @@
 package com.bidding.auction.api
 
-import com.bidding.auction.api.generated.AuctionApi
-import com.bidding.auction.api.generated.model.AuctionRequest
-import com.bidding.auction.api.generated.model.AuctionResponse
-import com.bidding.auction.api.generated.model.AuctionUpdateRequest
 import com.bidding.auction.application.AuctionApplicationService
+import com.bidding.auction.generated.api.AuctionApi
+import com.bidding.auction.generated.api.model.AuctionRequest
+import com.bidding.auction.generated.api.model.AuctionResponse
+import com.bidding.auction.generated.api.model.AuctionUpdateRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID

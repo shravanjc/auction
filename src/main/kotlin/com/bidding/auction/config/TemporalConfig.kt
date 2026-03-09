@@ -19,7 +19,7 @@ import java.time.Duration
 @EnableConfigurationProperties(TemporalProperties::class)
 class TemporalConfig(
     private val properties: TemporalProperties,
-    private val activitiesImpl: AuctionActivities
+    private val auctionActivities: AuctionActivities
 ) {
 
     private val log = LoggerFactory.getLogger(TemporalConfig::class.java)
@@ -51,7 +51,7 @@ class TemporalConfig(
         val factory = WorkerFactory.newInstance(workflowClient)
         val worker = factory.newWorker(properties.taskQueue)
         worker.registerWorkflowImplementationTypes(AuctionWorkflowImpl::class.java)
-        worker.registerActivitiesImplementations(activitiesImpl)
+        worker.registerActivitiesImplementations(auctionActivities)
 
         return object : SmartLifecycle {
             @Volatile private var running = false

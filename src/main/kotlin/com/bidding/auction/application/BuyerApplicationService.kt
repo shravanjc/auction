@@ -1,9 +1,9 @@
 package com.bidding.auction.application
 
-import com.bidding.auction.api.generated.model.BuyerRequest
-import com.bidding.auction.api.generated.model.BuyerResponse
 import com.bidding.auction.domain.model.Buyer
 import com.bidding.auction.domain.repository.BuyerRepository
+import com.bidding.auction.generated.api.model.BuyerRequest
+import com.bidding.auction.generated.api.model.BuyerResponse
 import org.springframework.stereotype.Service
 import java.util.UUID
 

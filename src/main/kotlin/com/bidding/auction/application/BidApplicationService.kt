@@ -1,12 +1,12 @@
 package com.bidding.auction.application
 
-import com.bidding.auction.api.generated.model.BidRequest
-import com.bidding.auction.api.generated.model.BidResponse
-import com.bidding.auction.api.generated.model.WinningBidResponse
 import com.bidding.auction.domain.repository.AuctionRepository
 import com.bidding.auction.domain.repository.BidRepository
 import com.bidding.auction.domain.service.BidDomainService
 import com.bidding.auction.domain.workflow.AuctionWorkflow
+import com.bidding.auction.generated.api.model.BidRequest
+import com.bidding.auction.generated.api.model.BidResponse
+import com.bidding.auction.generated.api.model.WinningBidResponse
 import io.temporal.client.WorkflowClient
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

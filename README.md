@@ -175,3 +175,11 @@ Once the deadline passes with no extension signal, the workflow calls `markWinni
 3. Swagger UI at http://localhost:8080/swagger-ui.html
 4. Flow: create seller -> create buyer -> create auction (workflow starts in Temporal UI at :8088) ->
    place bids -> check winning bid after endTime
+
+---
+
+## Temporal workflow UI
+You can access Temporal's workflow UI running at: http://localhost:8088.
+
+The screenshot shows a clear workflow in action.
+![Temporal Workflow UI](TemporalWorkflowUI.png)
